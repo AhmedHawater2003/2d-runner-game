@@ -4,7 +4,7 @@
 
 // Constructor
 Shield::Shield(std::pair<double, double> position)
-    : BoundingBox(position, POWERUP_WIDTH, POWERUP_HEIGHT), animationTime(0.0) {
+    : BoundingBox(position, POWERUP_WIDTH, POWERUP_HEIGHT){
 }
 
 // Get the shield's position
@@ -42,19 +42,35 @@ void Shield::render() {
     }
     glEnd();
 
-    // Draw energy waves
-    glBegin(GL_LINE_STRIP);
-    glColor4f(0.0f, 1.0f, 1.0f, 0.8f);  // Cyan, more opaque
-    for (int i = 0; i <= 200; ++i) {
-        double theta = 2.0 * 3.14159 * double(i) / 200.0;
-        double waveOffset = 0.1 * std::sin(5 * theta + animationTime * 3);
-        double x = centerX + (radius * (1 + waveOffset)) * std::cos(theta);
-        double y = centerY + (radius * (1 + waveOffset)) * std::sin(theta);
+    // Draw hexagonal energy field
+    glBegin(GL_TRIANGLE_FAN);
+    glColor4f(0.2f, 0.8f, 1.0f, 0.5f);  // Lighter blue, semi-transparent
+    for (int i = 0; i < 6; ++i) {
+        double theta = 2.0 * 3.14159 * double(i) / 6.0;
+        double x = centerX + radius * 0.8 * std::cos(theta);
+        double y = centerY + radius * 0.8 * std::sin(theta);
         glVertex2d(x, y);
     }
     glEnd();
 
-    // Draw the inner energy core
+    // Draw rotating triangles
+    glPushMatrix();
+    glTranslated(centerX, centerY, 0);
+    glRotated(animationTime * 50, 0, 0, 1);  // Rotate based on animation time
+    for (int i = 0; i < 3; ++i) {
+        glPushMatrix();
+        glRotated(120 * i, 0, 0, 1);
+        glBegin(GL_TRIANGLES);
+        glColor4f(1.0f, 1.0f, 1.0f, 0.7f);  // Yellow, semi-transparent
+        glVertex2d(0, -radius * 0.7);
+        glVertex2d(-radius * 0.2, -radius * 0.4);
+        glVertex2d(radius * 0.2, -radius * 0.4);
+        glEnd();
+        glPopMatrix();
+    }
+    glPopMatrix();
+
+    // Draw the inner energy core (circle)
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(1.0f, 1.0f, 1.0f, 0.9f);  // Bright white core
     glVertex2d(centerX, centerY);
@@ -68,16 +84,14 @@ void Shield::render() {
     }
     glEnd();
 
-    // Draw pulsing energy particles
-    glPointSize(2.0f);
-    glBegin(GL_POINTS);
-    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);  // Bright white particles
-    for (int i = 0; i < 50; ++i) {
-        double theta = 2.0 * 3.14159 * (double(i) / 50.0 + 0.1 * std::sin(animationTime));
-        double particleRadius = radius * (0.5 + 0.5 * std::sin(animationTime * 2 + i));
-        double x = centerX + particleRadius * std::cos(theta);
-        double y = centerY + particleRadius * std::sin(theta);
-        glVertex2d(x, y);
-    }
+    // Draw pulsing square
+    double squareSize = radius * 0.4 * (1.0 + 0.2 * std::sin(animationTime * 3));
+    glBegin(GL_QUADS);
+    glColor4f(1.0f, 1.0f, 1.0f, 0.5f);  // Green, semi-transparent
+    glVertex2d(centerX - squareSize, centerY - squareSize);
+    glVertex2d(centerX + squareSize, centerY - squareSize);
+    glVertex2d(centerX + squareSize, centerY + squareSize);
+    glVertex2d(centerX - squareSize, centerY + squareSize);
     glEnd();
+
 }

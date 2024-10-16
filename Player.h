@@ -11,6 +11,8 @@ class Player : public BoundingBox
 		int shieldingTime, shrinkingTime;
 
 	public:
+		double obstacleBackOffDistance = 0;
+		double scale = 1;
 		static const int ORIGINAL_PLAYER_WIDTH = 50;
 		static const int ORIGINAL_PLAYER_HEIGHT = 50;
 		Player(std::pair<double,double> position, GameState* gameState);

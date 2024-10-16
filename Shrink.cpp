@@ -1,9 +1,10 @@
+
 #include "Shrink.h"
 #include <cmath>
 #include <glut.h>
 
 Shrink::Shrink(std::pair<double, double> position)
-    : BoundingBox(position, POWERUP_WIDTH, POWERUP_HEIGHT){
+    : BoundingBox(position, POWERUP_WIDTH, POWERUP_HEIGHT), animationTime(0.0) {
 }
 
 std::pair<double, double> Shrink::getPosition() {
@@ -25,13 +26,24 @@ void Shrink::render() {
     double centerX = position.first + POWERUP_WIDTH / 2;
     double centerY = position.second + POWERUP_HEIGHT / 2;
 
-    // Draw three squares, each smaller than the last
-    for (int i = 0; i < 3; ++i) {
-        double size = POWERUP_WIDTH * (1.0 - 0.25 * i) * scaleFactor;
+    // Draw outer circle
+    glColor4f(0.7f, 0.0f, 0.7f, 1.0f);  // Dark purple
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2d(centerX, centerY);
+    for (int i = 0; i <= 100; ++i) {
+        double angle = 2.0 * 3.14159 * i / 100;
+        glVertex2d(centerX + cos(angle) * POWERUP_WIDTH / 2 * scaleFactor,
+            centerY + sin(angle) * POWERUP_HEIGHT / 2 * scaleFactor);
+    }
+    glEnd();
 
-        // Alternate colors between purple and magenta
+    // Draw three nested squares, each smaller than the last
+    for (int i = 0; i < 3; ++i) {
+        double size = POWERUP_WIDTH * (0.8 - 0.2 * i) * scaleFactor;
+
+        // Alternate colors between light purple and magenta
         if (i % 2 == 0) {
-            glColor4f(0.5f, 0.0f, 0.5f, 1.0f);  // Purple
+            glColor4f(0.8f, 0.3f, 0.8f, 1.0f);  // Light purple
         }
         else {
             glColor4f(1.0f, 0.0f, 1.0f, 1.0f);  // Magenta
@@ -45,11 +57,39 @@ void Shrink::render() {
         glEnd();
     }
 
-    // Draw arrows pointing inward
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);  // White arrows
-    glLineWidth(3.0f);
+    // Draw rotating triangles
+    glPushMatrix();
+    glTranslated(centerX, centerY, 0);
+    glRotated(animationTime * 100, 0, 0, 1);  // Rotate based on animation time
+    for (int i = 0; i < 4; ++i) {
+        glPushMatrix();
+        glRotated(90 * i, 0, 0, 1);
+        glBegin(GL_TRIANGLES);
+        glColor4f(1.0f, 1.0f, 0.0f, 0.7f);  // Yellow, semi-transparent
+        glVertex2d(0, -POWERUP_HEIGHT * 0.4 * scaleFactor);
+        glVertex2d(-POWERUP_WIDTH * 0.1 * scaleFactor, -POWERUP_HEIGHT * 0.25 * scaleFactor);
+        glVertex2d(POWERUP_WIDTH * 0.1 * scaleFactor, -POWERUP_HEIGHT * 0.25 * scaleFactor);
+        glEnd();
+        glPopMatrix();
+    }
+    glPopMatrix();
 
-    double arrowSize = POWERUP_WIDTH * 0.5 * scaleFactor;
+    // Draw pulsing inner circle
+    double innerRadius = POWERUP_WIDTH * 0.15 * (1.0 + 0.2 * sin(animationTime * 3)) * scaleFactor;
+    glColor4f(1.0f, 1.0f, 1.0f, 0.8f);  // White, slightly transparent
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2d(centerX, centerY);
+    for (int i = 0; i <= 100; ++i) {
+        double angle = 2.0 * 3.14159 * i / 100;
+        glVertex2d(centerX + cos(angle) * innerRadius, centerY + sin(angle) * innerRadius);
+    }
+    glEnd();
+
+    // Draw inward arrows
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);  // Green arrows
+    glLineWidth(2.0f);
+
+    double arrowSize = POWERUP_WIDTH * 0.6 * scaleFactor;
     double arrowHead = POWERUP_WIDTH * 0.2 * scaleFactor;
 
     // Left arrow

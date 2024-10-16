@@ -53,10 +53,10 @@ void CollesionManager::handleCollesions()
 
 void CollesionManager::handleObstacleCollesion(Obstacle* obstacle)
 {
-	obstacles->erase(std::remove(obstacles->begin(), obstacles->end(), obstacle), obstacles->end());
-	delete obstacle;
-	if(player->getShieldingTime() == 0)
+	if (player->getShieldingTime() == 0) {
 		gameState->setLives(gameState->getLives() - 1);
+		player->obstacleBackOffDistance = 300;
+	}
 }
 
 void CollesionManager::handleCollectableCollesion(Collectable* collectable)
@@ -78,6 +78,6 @@ void CollesionManager::handleShrinkCollesion(Shrink* shrink)
 {
 	shrinks->erase(std::remove(shrinks->begin(), shrinks->end(), shrink), shrinks->end());
 	delete shrink;
-	player->setShrinkingTime(10);
+	player->setShrinkingTime(20);
 
 }

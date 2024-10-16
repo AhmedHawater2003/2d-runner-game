@@ -10,6 +10,7 @@
 #include "GameState.h"
 #include "Shield.h"
 #include "Shrink.h"
+#include "Star.h"
 
 class GameManager
 {
@@ -25,6 +26,9 @@ private:
     std::vector<Collectable*> collectables;
     std::vector<Shrink*> shrinks;
     std::vector<Shield*> shields;
+    std::vector<Star*> stars;
+    double starSpawnTimer;
+    double starSpawnInterval;
 
 public:
     GameManager(double gameHeight, double gameWidth);
@@ -32,4 +36,6 @@ public:
     void renderGame();
     void handleKeyboardDown(unsigned char keyboardInput);
     void handleKeyboardUp(unsigned char keyboardInput);
+    void updateStars();
+    void initializeStars();
 };

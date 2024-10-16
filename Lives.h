@@ -9,4 +9,5 @@ private:
 public:
     Lives(double x, double y, GameState* gameState);
     void render();
+    void renderUFO(double x, double y, double size);
 };

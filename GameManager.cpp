@@ -3,13 +3,24 @@
 #include <glut.h>
 #include <string>
 
-GameManager::GameManager(double gameHeight, double gameWidth){
-	gameState = new GameState(0, 3, gameWidth, gameHeight, 100, gameHeight - 100, 3, 120);
+GameManager::GameManager(double gameHeight, double gameWidth) {
+	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 120);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
 	player = new Player({ 10, gameState->getLowerBound() }, gameState);
 	flowManager = new FlowManager(gameState, &obstacles, &collectables, &shrinks, &shields);
-	collesionManager = new CollesionManager(player, gameState ,&obstacles, &collectables, &shields, &shrinks);
+	collesionManager = new CollesionManager(player, gameState, &obstacles, &collectables, &shields, &shrinks);
+	initializeStars();
+}
+
+void GameManager::initializeStars() {
+	stars.clear();
+	for (int i = 0; i < 200; ++i) {
+		double x = rand() % static_cast<int>(gameState->getWidth());
+		double y = gameState->getHeight() - 150 - (rand() % 200); // Between gameHeight - 100 and gameHeight - 300
+		double size = 10 + (rand() % 6); // Random size between 10 and 10
+		stars.push_back(new Star(x, y, size));
+	}
 }
 
 void GameManager::renderGame() {
@@ -24,22 +35,44 @@ void GameManager::renderGame() {
 		return;
 	}
 
-	for (Obstacle* obstacle : obstacles) {
-		obstacle->render();
-	}
-	for (Collectable* collectable : collectables) {
-		collectable->render();
-	}
-	for (Shield* shield : shields) {
-		shield->render();
-	}
-	for (Shrink* shrink : shrinks) {
-		shrink->render();
-	}
 	player->render();
 	lowerSection->render();
 	upperSection->render();
-	flowManager->showPowerUps();
+
+	glPushMatrix();
+	for (Obstacle* obstacle : obstacles) {
+		auto currentPosition = obstacle->getPosition();
+		obstacle->setPosition({ currentPosition.first + player->obstacleBackOffDistance , currentPosition.second });
+		obstacle->render();
+	}
+	for (Collectable* collectable : collectables) {
+		auto currentPosition = collectable->getPosition();
+		collectable->setPosition({ currentPosition.first + player->obstacleBackOffDistance , currentPosition.second });
+		collectable->render();
+	}
+	for (Shield* shield : shields) {
+		auto currentPosition = shield->getPosition();
+		shield->setPosition({ currentPosition.first + player->obstacleBackOffDistance , currentPosition.second });
+		shield->render();
+	}
+	for (Shrink* shrink : shrinks) {
+		auto currentPosition = shrink->getPosition();
+		shrink->setPosition({ currentPosition.first + player->obstacleBackOffDistance , currentPosition.second });
+		shrink->render();
+	}
+	glPopMatrix();
+
+	for (Star* star : stars) {
+		star->render();
+	}
+
+	player->obstacleBackOffDistance /= 4;
+}
+
+void GameManager::updateStars() {
+	for (Star* star : stars) {
+		star->update();
+	}
 }
 
 void GameManager::handleKeyboardDown(unsigned char keyboardInput) {
@@ -66,6 +99,7 @@ void GameManager::onTimer() {
 		player->applyGravity();
 
 		collesionManager->handleCollesions();
+		flowManager->showPowerUps();
 		flowManager->moveObstacles();
 		flowManager->moveCollectables();
 		flowManager->moveShields();
@@ -77,6 +111,8 @@ void GameManager::onTimer() {
 			player->decreasePowerUpTime();
 			//gameState->setSpeed(gameState->getSpeed() + 0.1);
 		}
+
+		updateStars();
 
 		//if (!gameState->getLives()) {
 		//	gameState->isGameLost = true;

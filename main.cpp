@@ -4,7 +4,7 @@
 
 GameManager* gameManger;
 const double GAME_WIDTH = 1000;
-const double GAME_HEIGHT = 600;
+const double GAME_HEIGHT = 800;
 
 void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -39,8 +39,7 @@ void main(int argc, char** argv) {
 
 	glutInitWindowSize(GAME_WIDTH, GAME_HEIGHT);
 	glutInitWindowPosition(0, 0);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	glutCreateWindow("Runner Game");
 	glutDisplayFunc(Display);
@@ -49,7 +48,7 @@ void main(int argc, char** argv) {
 	glutKeyboardUpFunc(KeyboardUp);
 
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(7/255.0, 14/255.0, 23/255.0, 1.0f);
 	gluOrtho2D(0, GAME_WIDTH, 0, GAME_HEIGHT);
 
 	glutMainLoop();

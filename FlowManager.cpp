@@ -15,12 +15,12 @@ FlowManager::FlowManager(GameState* gameState, std::vector<Obstacle*>* obstacles
 }
 
 void FlowManager::selectPowerUpsTimes() {
-	for (int i = 0; i < 2; i++) {
-		int oddTime = ((rand() % 10) + 1) *2 + 1;
+	for (int i = 0; i < 5; i++) {
+		int oddTime = ((rand() % gameState->gameDuration/2) + 1) *2 + 1;
 		shieldsTimes.push_back(oddTime);
 	}
-	for (int i = 0; i < 2; i++) {
-		int evenTime = ((rand() % 10) + 1) * 2;
+	for (int i = 0; i < 5; i++) {
+		int evenTime = ((rand() % gameState->gameDuration / 2) + 1) * 2;
 		shrinksTimes.push_back(evenTime);
 	}
 }
@@ -143,10 +143,10 @@ void FlowManager::showPowerUps() {
 	int second = glutGet(GLUT_ELAPSED_TIME) / 1000;
 	if (std::count(all(shieldsTimes), second)) {
 		shieldsTimes.erase(std::remove(shieldsTimes.begin(), shieldsTimes.end(), second), shieldsTimes.end());
-		shields->push_back(new Shield({ gameState->getWidth(), 250}));
+		shields->push_back(new Shield({ gameState->getWidth(), 200}));
 	}
 	if (std::count(all(shrinksTimes), second)) {
 		shrinksTimes.erase(std::remove(shrinksTimes.begin(), shrinksTimes.end(), second), shrinksTimes.end());
-		shrinks->push_back(new Shrink({ gameState->getWidth(), 300 }));
+		shrinks->push_back(new Shrink({ gameState->getWidth(), 250 }));
 	}
 }
