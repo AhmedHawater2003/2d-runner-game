@@ -9,6 +9,7 @@ GameState::GameState(int score, int lives, double width, double height, double l
 	this->lowerBound = lowerBound;
 	this->upperBound = upperBound;
 	this->speed = speed;
+	this->lastCapturedSecond = 0;
 }
 
 void GameState::setScore(int score)
@@ -67,3 +68,12 @@ void GameState::reset()
 	lives = 3;
 }
 
+int GameState::getLastCapturedSecond()
+{
+	return lastCapturedSecond;
+}
+
+void GameState::setLastCapturedSecond(int lastCapturedSecond)
+{
+	this->lastCapturedSecond = lastCapturedSecond;
+}

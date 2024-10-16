@@ -1,15 +1,13 @@
 #include "GameManager.h"
+#include <glut.h>
 
 GameManager::GameManager(double gameHeight, double gameWidth){
 	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
-
-	player = new Player({ 10, gameState->getLowerBound() }, gameState->getLowerBound());
-
-	flowManager = new FlowManager(gameState, &obstacles, &collectables);
-	collesionManager = new CollesionManager(player, gameState ,&obstacles, &collectables);
-	flowManager->addCollectable();
+	player = new Player({ 10, gameState->getLowerBound() }, gameState);
+	flowManager = new FlowManager(gameState, &obstacles, &collectables, &shrinks, &shields);
+	collesionManager = new CollesionManager(player, gameState ,&obstacles, &collectables, &shields, &shrinks);
 }
 
 void GameManager::renderGame() {
@@ -19,9 +17,16 @@ void GameManager::renderGame() {
 	for (Collectable* collectable : collectables) {
 		collectable->render();
 	}
+	for (Shield* shield : shields) {
+		shield->render();
+	}
+	for (Shrink* shrink : shrinks) {
+		shrink->render();
+	}
 	player->render();
 	lowerSection->render();
 	upperSection->render();
+	flowManager->showPowerUps();
 }
 
 void GameManager::handleKeyboardDown(unsigned char keyboardInput) {
@@ -44,9 +49,19 @@ void GameManager::handleKeyboardUp(unsigned char keyboardInput) {
 }
 
 void GameManager::onTimer() {
-	//gameSpeed += 0.0001;
 	player->applyGravity();
+
 	collesionManager->handleCollesions();
 	flowManager->moveObstacles();
 	flowManager->moveCollectables();
+	flowManager->moveShields();
+	flowManager->moveShrinks();
+
+	int currentSecond = glutGet(GLUT_ELAPSED_TIME) / 1000;
+	if (currentSecond > gameState->getLastCapturedSecond()) {
+		gameState->setLastCapturedSecond(currentSecond);
+		player->decreasePowerUpTime();
+		gameState->setSpeed(gameState->getSpeed() + 0.1);
+	}	
+
 }

@@ -92,6 +92,8 @@
     <ClCompile Include="Lives.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Shield.cpp" />
+    <ClCompile Include="Shrink.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="GameUpperSection.cpp" />
     <ClCompile Include="main.cpp" />
@@ -109,6 +111,8 @@
     <ClInclude Include="Lives.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Shield.h" />
+    <ClInclude Include="Shrink.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="GameUpperSection.h" />
     <ClInclude Include="Obstacle.h" />

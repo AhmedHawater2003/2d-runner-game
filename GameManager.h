@@ -8,6 +8,8 @@
 #include "Player.h"
 #include "CollesionManager.h"
 #include "GameState.h"
+#include "Shield.h"
+#include "Shrink.h"
 
 class GameManager
 {
@@ -21,6 +23,8 @@ private:
     CollesionManager* collesionManager;
     std::vector<Obstacle*> obstacles;
     std::vector<Collectable*> collectables;
+    std::vector<Shrink*> shrinks;
+    std::vector<Shield*> shields;
 
 public:
     GameManager(double gameHeight, double gameWidth);
