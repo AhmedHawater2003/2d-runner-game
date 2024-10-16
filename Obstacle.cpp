@@ -20,6 +20,12 @@ void Obstacle::render() {
     const double radius = std::min(OBSTACLE_WIDTH, OBSTACLE_HEIGHT) / 3;  // Approximate ball radius
     const double spikeLength = radius * 0.8;
 
+    rotationAngel += 20;
+
+    glPushMatrix();
+    glTranslated(position.first + OBSTACLE_WIDTH / 2, position.second + OBSTACLE_HEIGHT / 2, 0);
+    glRotated(rotationAngel, 0, 0, 1);
+    glTranslated(-(position.first + OBSTACLE_WIDTH/2), -(position.second + OBSTACLE_HEIGHT/2), 0);
     // Draw the ball using GL_TRIANGLE_FAN for a smooth circle
     glColor3f(0.7f, 0.2f, 0.2f);  // Dark red
     glBegin(GL_TRIANGLE_FAN);
@@ -55,4 +61,5 @@ void Obstacle::render() {
     glVertex2d(centerX + radius + spikeLength, centerY + spikeLength / 2);  // Top of the spike tip
 
     glEnd();
+    glPopMatrix();
 }

@@ -3,7 +3,7 @@
 
 GameUpperSection::GameUpperSection(GameState* gameState, double height) :
 	gameState(gameState), height(height) {
-	gameTime = new Time(50, gameState->getHeight() - (height / 2 + 10));
+	gameTime = new Time(50, gameState->getHeight() - (height / 2 + 10), gameState->gameDuration);
 	gameScore = new Score(150, gameState->getHeight() - (height / 2 + 10), gameState);
 	playerLives = new Lives(250, gameState->getHeight() - (height / 2 + 10), gameState);
 }

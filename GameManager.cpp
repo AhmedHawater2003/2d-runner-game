@@ -1,9 +1,10 @@
 #include "GameManager.h"
-#include <glut.h>
 #include "Text.h"
+#include <glut.h>
+#include <string>
 
 GameManager::GameManager(double gameHeight, double gameWidth){
-	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3);
+	gameState = new GameState(0, 3, gameWidth, gameHeight, 100, gameHeight - 100, 3, 120);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
 	player = new Player({ 10, gameState->getLowerBound() }, gameState);
@@ -13,11 +14,13 @@ GameManager::GameManager(double gameHeight, double gameWidth){
 
 void GameManager::renderGame() {
 	if (gameState->isGameOver) {
-		Text(gameState->getWidth() / 2 - 50, gameState->getHeight() / 2, "Game Over").render();
+		std::string message = "Game Over, you won! Your score: " + std::to_string(gameState->getScore());
+		Text(gameState->getWidth() / 2 - 150, gameState->getHeight() / 2, message, 0, 1, 0).render();
 		return;
 	}
 	if (gameState->isGameLost) {
-		Text(gameState->getWidth() / 2 - 50, gameState->getHeight() / 2, "Game Lost").render();
+		std::string message = "Game Lost, what a shame! Your score: " + std::to_string(gameState->getScore());
+		Text(gameState->getWidth() / 2 - 150, gameState->getHeight() / 2, message, 1, 0, 0).render();
 		return;
 	}
 
@@ -59,26 +62,28 @@ void GameManager::handleKeyboardUp(unsigned char keyboardInput) {
 }
 
 void GameManager::onTimer() {
-	player->applyGravity();
+	if (!gameState->isGameLost && !gameState->isGameOver) {
+		player->applyGravity();
 
-	collesionManager->handleCollesions();
-	flowManager->moveObstacles();
-	flowManager->moveCollectables();
-	flowManager->moveShields();
-	flowManager->moveShrinks();
+		collesionManager->handleCollesions();
+		flowManager->moveObstacles();
+		flowManager->moveCollectables();
+		flowManager->moveShields();
+		flowManager->moveShrinks();
 
-	int currentSecond = glutGet(GLUT_ELAPSED_TIME) / 1000;
-	if (currentSecond > gameState->getLastCapturedSecond()) {
-		gameState->setLastCapturedSecond(currentSecond);
-		player->decreasePowerUpTime();
-		gameState->setSpeed(gameState->getSpeed() + 0.1);
-	}
+		int currentSecond = glutGet(GLUT_ELAPSED_TIME) / 1000;
+		if (currentSecond > gameState->getLastCapturedSecond()) {
+			gameState->setLastCapturedSecond(currentSecond);
+			player->decreasePowerUpTime();
+			//gameState->setSpeed(gameState->getSpeed() + 0.1);
+		}
 
-	if (!gameState->getLives()) {
-		gameState->isGameLost = true;
-	}
-	if (gameState->getLastCapturedSecond() > 60) {
-		gameState->isGameOver = true;
+		//if (!gameState->getLives()) {
+		//	gameState->isGameLost = true;
+		//}
+		//if (gameState->getLastCapturedSecond() > gameState->gameDuration) {
+		//	gameState->isGameOver = true;
+		//}
 	}
 
 }

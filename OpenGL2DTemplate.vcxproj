@@ -83,6 +83,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimateInPlace.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Collectable.cpp" />
     <ClCompile Include="CollesionManager.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimateInPlace.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Collectable.h" />
     <ClInclude Include="CollesionManager.h" />

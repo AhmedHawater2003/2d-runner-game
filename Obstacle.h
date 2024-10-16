@@ -3,8 +3,11 @@
 #include <utility>
 class Obstacle: public BoundingBox
 {
+private:
 
 public:
+	double rotationAngel = 0;
+
 	static const int OBSTACLE_WIDTH = 30;
 	static const int OBSTACLE_HEIGHT = 30;
 	Obstacle(std::pair<double, double> position);

@@ -13,8 +13,9 @@ private:
 	public:
 		bool isGameOver;
 		bool isGameLost;
+		int gameDuration;
 
-		GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed);
+		GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed, int gameDuration);
 		int getScore();
 		int getLives();
 		double getSpeed();

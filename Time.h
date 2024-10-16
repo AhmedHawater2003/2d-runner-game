@@ -6,7 +6,7 @@ private:
     double y;
     int startTime;
 public:
-    Time(double x, double y);
+    Time(double x, double y, int startTime);
     void render();
 };
 

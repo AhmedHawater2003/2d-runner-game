@@ -1,10 +1,11 @@
-#pragma once
+ #pragma once
 #include "BoundingBox.h"
 #include <utility>
 class Collectable : public BoundingBox
 {
 
 public:
+	double colorChangeFactor=0;
 	static const int COLLECTABLE_WIDTH = 40;
 	static const int COLLECTABLE_HEIGHT = 40;
 	Collectable(std::pair<double, double> position);

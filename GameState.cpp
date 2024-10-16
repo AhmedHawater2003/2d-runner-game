@@ -1,6 +1,6 @@
 #include "GameState.h"
 
-GameState::GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed)
+GameState::GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed, int gameDuaration)
 {
 	this->score = score;
 	this->lives = lives;
@@ -9,6 +9,7 @@ GameState::GameState(int score, int lives, double width, double height, double l
 	this->lowerBound = lowerBound;
 	this->upperBound = upperBound;
 	this->speed = speed;
+	this->gameDuration = gameDuaration;
 	this->lastCapturedSecond = 0;
 	this->isGameOver = false;
 	this->isGameLost = false;

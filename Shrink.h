@@ -4,6 +4,7 @@
 class Shrink: public BoundingBox
 {
 public:
+	double animationTime = 0;
 	static const int POWERUP_WIDTH = 30;
 	static const int POWERUP_HEIGHT = 30;
 	Shrink(std::pair<double, double> position);
