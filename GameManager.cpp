@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include <glut.h>
+#include "Text.h"
 
 GameManager::GameManager(double gameHeight, double gameWidth){
 	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3);
@@ -11,6 +12,15 @@ GameManager::GameManager(double gameHeight, double gameWidth){
 }
 
 void GameManager::renderGame() {
+	if (gameState->isGameOver) {
+		Text(gameState->getWidth() / 2 - 50, gameState->getHeight() / 2, "Game Over").render();
+		return;
+	}
+	if (gameState->isGameLost) {
+		Text(gameState->getWidth() / 2 - 50, gameState->getHeight() / 2, "Game Lost").render();
+		return;
+	}
+
 	for (Obstacle* obstacle : obstacles) {
 		obstacle->render();
 	}
@@ -62,6 +72,13 @@ void GameManager::onTimer() {
 		gameState->setLastCapturedSecond(currentSecond);
 		player->decreasePowerUpTime();
 		gameState->setSpeed(gameState->getSpeed() + 0.1);
-	}	
+	}
+
+	if (!gameState->getLives()) {
+		gameState->isGameLost = true;
+	}
+	if (gameState->getLastCapturedSecond() > 60) {
+		gameState->isGameOver = true;
+	}
 
 }

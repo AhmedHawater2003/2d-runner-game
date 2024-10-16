@@ -10,6 +10,8 @@ GameState::GameState(int score, int lives, double width, double height, double l
 	this->upperBound = upperBound;
 	this->speed = speed;
 	this->lastCapturedSecond = 0;
+	this->isGameOver = false;
+	this->isGameLost = false;
 }
 
 void GameState::setScore(int score)

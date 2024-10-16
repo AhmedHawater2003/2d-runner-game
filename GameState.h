@@ -11,18 +11,21 @@ private:
 	double speed;
 	int lastCapturedSecond;
 	public:
+		bool isGameOver;
+		bool isGameLost;
+
 		GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed);
-		void setScore(int score);
 		int getScore();
-		void setLives(int lives);
 		int getLives();
-		void setSpeed(double speed);
 		double getSpeed();
 		double getWidth();
 		double getHeight();
 		double getLowerBound();
 		double getUpperBound();
 		int getLastCapturedSecond();
+		void setScore(int score);
+		void setLives(int lives);
+		void setSpeed(double speed);
 		void setLastCapturedSecond(int lastCapturedSecond);
 		void reset();
 };
