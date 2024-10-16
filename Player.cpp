@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <cmath>
 #include <glut.h>
 
 Player::Player(std::pair<double, double> position, GameState* gameState)
@@ -7,60 +8,58 @@ Player::Player(std::pair<double, double> position, GameState* gameState)
 }
 
 void Player::render() {
+    // scale down with a factor of 2 if shrinking
+    scale = shrinkingTime ? 0.6 : 1;
 
-	// scale down with a factor of 2 if shrinking
-	scale = shrinkingTime ? 0.6 : 1;
+    width = scale * ORIGINAL_PLAYER_WIDTH;
+    height = scale * ORIGINAL_PLAYER_HEIGHT / (isDucking() ? 2 : 1);
 
-	width = scale * ORIGINAL_PLAYER_WIDTH;
-	height = scale * ORIGINAL_PLAYER_HEIGHT / (isDucking() ? 2 : 1);
+    const double centerX = position.first + width / 2;
+    const double centerY = position.second + height / 2;
+    const double radius = std::min(width, height) / 2;  // Approximate ball radius
 
-	glPushMatrix();
-	
-	// Body
-	if (shieldingTime)
-		glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
-	else
-		glColor3f(160 / 255.0, 210 / 255.0, 158 / 255.0);
+    glPushMatrix();
 
-	glBegin(GL_QUADS);
-	glVertex2d(position.first, position.second);
-	glVertex2d(position.first + width, position.second);
-	glVertex2d(position.first + width, position.second + height);
-	glVertex2d(position.first, position.second + height);
-	glEnd();
+    // Head outline (using GL_TRIANGLE_FAN for smooth edges)
+    if (shieldingTime)
+        glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
+    else
+        glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
 
-	// Eyes
-	glColor3f(1.0f, 1.0f, 1.0f);  // White
-	glBegin(GL_TRIANGLES);
-	// Left eye
-	glVertex2d(position.first + width * 0.3, position.second + height * 0.7);
-	glVertex2d(position.first + width * 0.4, position.second + height * 0.8);
-	glVertex2d(position.first + width * 0.2, position.second + height * 0.8);
-	// Right eye
-	glVertex2d(position.first + width * 0.7, position.second + height * 0.7);
-	glVertex2d(position.first + width * 0.8, position.second + height * 0.8);
-	glVertex2d(position.first + width * 0.6, position.second + height * 0.8);
-	glEnd();
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2d(centerX, centerY); // Center of the sun
+    for (int i = 0; i <= 20; ++i) {
+        double angle = 2.0 * 3.14 * i / 20;
+        double dx = cos(angle) * radius;
+        double dy = sin(angle) * radius;
+        glVertex2d(centerX + dx, centerY + dy);
+    }
+    glEnd();
 
-	// Mouth
-	glColor3f(1.0f, 0.0f, 0.0f);  // Red
-	glBegin(GL_LINE_STRIP);
-	glVertex2d(position.first + width * 0.3, position.second + height * 0.3);
-	glVertex2d(position.first + width * 0.5, position.second + height * 0.2);
-	glVertex2d(position.first + width * 0.7, position.second + height * 0.3);
-	glEnd();
+    // Eyes (using GL_QUADS for almond shape)
+    glColor3f(0.0f, 0.0f, 0.0f);  // Black
+    glBegin(GL_QUADS);
+    // Left eye
+    glVertex2d(position.first + width * 0.25, position.second + height * 0.6);
+    glVertex2d(position.first + width * 0.45, position.second + height * 0.7);
+    glVertex2d(position.first + width * 0.45, position.second + height * 0.5);
+    glVertex2d(position.first + width * 0.25, position.second + height * 0.4);
+    // Right eye
+    glVertex2d(position.first + width * 0.75, position.second + height * 0.6);
+    glVertex2d(position.first + width * 0.55, position.second + height * 0.7);
+    glVertex2d(position.first + width * 0.55, position.second + height * 0.5);
+    glVertex2d(position.first + width * 0.75, position.second + height * 0.4);
+    glEnd();
 
-	// Antenna
-	glColor3f(0.0f, 1.0f, 0.0f);  // Green
-	glBegin(GL_LINES);
-	glVertex2d(position.first + width * 0.5, position.second + height);
-	glVertex2d(position.first + width * 0.5, position.second + height * 1.2);
-	glEnd();
-	glPointSize(5.0f);
-	glBegin(GL_POINTS);
-	glVertex2d(position.first + width * 0.5, position.second + height * 1.2);
-	glEnd();
-	glPopMatrix();
+    // Mouth (using GL_LINE_STRIP)
+    glColor3f(0.0f, 0.0f, 0.0f);  // Black
+    glBegin(GL_LINE_STRIP);
+    glVertex2d(position.first + width * 0.4, position.second + height * 0.25);
+    glVertex2d(position.first + width * 0.5, position.second + height * 0.2);
+    glVertex2d(position.first + width * 0.6, position.second + height * 0.25);
+    glEnd();
+
+    glPopMatrix();
 }
 
 bool Player::isDucking()
@@ -89,8 +88,8 @@ void Player::unDuck()
 
 void Player::applyGravity()
 {
-	const double MAX_GRAVITY = 5;   // Maximum gravity strength
-	const double MIN_GRAVITY = 1.5; // Minimum gravity strength when at jump height
+	const double MAX_GRAVITY = gameState->maxGravity;   // Maximum gravity strength
+	const double MIN_GRAVITY = gameState->minGravity; // Minimum gravity strength when at jump height
 
 	// Calculate the player's height from the lower bound
 	double distanceFromGround = position.second - gameState->getLowerBound();

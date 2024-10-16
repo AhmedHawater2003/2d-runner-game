@@ -78,6 +78,6 @@ void CollesionManager::handleShrinkCollesion(Shrink* shrink)
 {
 	shrinks->erase(std::remove(shrinks->begin(), shrinks->end(), shrink), shrinks->end());
 	delete shrink;
-	player->setShrinkingTime(20);
+	player->setShrinkingTime(10);
 
 }

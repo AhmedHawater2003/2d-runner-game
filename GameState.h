@@ -14,6 +14,8 @@ private:
 		bool isGameOver;
 		bool isGameLost;
 		int gameDuration;
+		double minGravity = 1.5;
+		double maxGravity = 5;
 
 		GameState(int score, int lives, double width, double height, double lowerBound, double upperBound, double speed, int gameDuration);
 		int getScore();

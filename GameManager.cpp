@@ -4,7 +4,7 @@
 #include <string>
 
 GameManager::GameManager(double gameHeight, double gameWidth) {
-	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 120);
+	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 10);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
 	player = new Player({ 10, gameState->getLowerBound() }, gameState);
@@ -109,17 +109,18 @@ void GameManager::onTimer() {
 		if (currentSecond > gameState->getLastCapturedSecond()) {
 			gameState->setLastCapturedSecond(currentSecond);
 			player->decreasePowerUpTime();
-			//gameState->setSpeed(gameState->getSpeed() + 0.1);
+			gameState->setSpeed(gameState->getSpeed() + 0.1);
+			gameState->minGravity += 0.1;
 		}
 
 		updateStars();
 
-		//if (!gameState->getLives()) {
-		//	gameState->isGameLost = true;
-		//}
-		//if (gameState->getLastCapturedSecond() > gameState->gameDuration) {
-		//	gameState->isGameOver = true;
-		//}
+		if (!gameState->getLives()) {
+			gameState->isGameLost = true;
+		}
+		if (gameState->getLastCapturedSecond() > gameState->gameDuration) {
+			gameState->isGameOver = true;
+		}
 	}
 
 }

@@ -1,4 +1,5 @@
 #include "GameUpperSection.h"
+#include "Text.h"
 #include <cmath>
 #include <glut.h>
 
@@ -7,16 +8,21 @@ GameUpperSection::GameUpperSection(GameState* gameState, double height) :
 	gameTime = new Time(50, gameState->getHeight() - (height / 2 + 20), gameState->gameDuration);
 	gameScore = new Score(150, gameState->getHeight() - (height / 2 + 20), gameState);
 	playerLives = new Lives(250, gameState->getHeight() - (height / 2 + 17), gameState);
+    
 }
  
 void GameUpperSection::render() {
 
+    std::string gameSpeed = "Speed: " + std::to_string(gameState->getSpeed());
+
     glPushMatrix();
 
-    // Render the player lives, game time, and score on the left
+    // Render the player lives, game time, score and game speed on the left
+    Text(450, gameState->getHeight() - (height / 2 + 20), gameSpeed).render();
     playerLives->render();
     gameTime->render();
     gameScore->render();
+
 
     // Now let's draw a blue sun with solar flares on the right side
     double sunX = gameState->getWidth() - 100; // Position the sun on the right
