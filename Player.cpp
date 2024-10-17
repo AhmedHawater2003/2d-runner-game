@@ -20,11 +20,11 @@ void Player::render() {
 
     glPushMatrix();
 
+    // Ducking alien: flattened disc shape
     if (isDucking) {
-        // Ducking alien: flattened disc shape
-        const double flattenedHeight = height * 0.4; // 40% of original height when ducking
-        height = flattenedHeight;
-        const double flattenedCenterY = position.second + flattenedHeight / 2;
+        
+        height = height * 0.4; // 40% of original height when ducking
+        const double flattenedCenterY = position.second + height / 2;
 
         // 1. Flattened body (using GL_TRIANGLE_FAN for smooth edges)
         if (shieldingTime)
@@ -37,7 +37,7 @@ void Player::render() {
         for (int i = 0; i <= 40; ++i) {
             double angle = 2.0 * 3.14 * i / 40;
             double dx = cos(angle) * width / 2;
-            double dy = sin(angle) * flattenedHeight / 2;
+            double dy = sin(angle) * height / 2;
             glVertex2d(centerX + dx, flattenedCenterY + dy);
         }
         glEnd();
@@ -47,33 +47,34 @@ void Player::render() {
         glBegin(GL_TRIANGLES);
         // Left eye
         glVertex2d(centerX - width * 0.2, flattenedCenterY);
-        glVertex2d(centerX - width * 0.1, flattenedCenterY + flattenedHeight * 0.2);
-        glVertex2d(centerX - width * 0.1, flattenedCenterY - flattenedHeight * 0.2);
+        glVertex2d(centerX - width * 0.1, flattenedCenterY + height * 0.2);
+        glVertex2d(centerX - width * 0.1, flattenedCenterY - height * 0.2);
         // Right eye
         glVertex2d(centerX + width * 0.2, flattenedCenterY);
-        glVertex2d(centerX + width * 0.1, flattenedCenterY + flattenedHeight * 0.2);
-        glVertex2d(centerX + width * 0.1, flattenedCenterY - flattenedHeight * 0.2);
+        glVertex2d(centerX + width * 0.1, flattenedCenterY + height * 0.2);
+        glVertex2d(centerX + width * 0.1, flattenedCenterY - height * 0.2);
         glEnd();
 
         // 3. Mouth (using GL_LINE_STRIP)
         glColor3f(0.0f, 0.0f, 0.0f);  // Black
         glBegin(GL_LINE_STRIP);
         glVertex2d(centerX - width * 0.15, flattenedCenterY);
-        glVertex2d(centerX, flattenedCenterY - flattenedHeight * 0.1);
+        glVertex2d(centerX, flattenedCenterY - height * 0.1);
         glVertex2d(centerX + width * 0.15, flattenedCenterY);
         glEnd();
 
     }
+
+    // Normal alien appearance
     else {
 
-        // Normal alien appearance (unchanged from previous version)
         // 1. Head outline (using GL_TRIANGLE_FAN for smooth edges)
         if (shieldingTime)
             glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
         else
             glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
 
-        height = scale * ORIGINAL_PLAYER_HEIGHT;
+        height = scale * ORIGINAL_PLAYER_HEIGHT; // Return back the player original height
 
         glBegin(GL_TRIANGLE_FAN);
         glVertex2d(centerX, centerY); // Center of the Alien
@@ -120,11 +121,6 @@ void Player::render() {
 
     glPopMatrix();
 }
-//
-//bool Player::isDucking()
-//{
-//	return height == ORIGINAL_PLAYER_HEIGHT * scale / 2;
-//}
 
 void Player::jump()
 {
@@ -136,14 +132,12 @@ void Player::jump()
 void Player::duck()
 {
 	if (position.second == gameState->getLowerBound() && !shrinkingTime)
-		/*height = ORIGINAL_PLAYER_HEIGHT * scale / 2;*/
         isDucking = true;
 }
 
 void Player::unDuck()
 {
 	if (position.second == gameState->getLowerBound())
-		//height = ORIGINAL_PLAYER_HEIGHT * scale;
 		isDucking = false;
 }
 
