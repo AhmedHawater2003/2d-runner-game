@@ -1,12 +1,12 @@
 #pragma once
-class Time
+class GameTime
 {
 private:
     double x;
     double y;
     int startTime;
 public:
-    Time(double x, double y, int startTime);
+    GameTime(double x, double y, int startTime);
     void render();
 };
 

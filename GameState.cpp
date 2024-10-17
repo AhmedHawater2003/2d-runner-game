@@ -13,6 +13,8 @@ GameState::GameState(int score, int lives, double width, double height, double l
 	this->lastCapturedSecond = 0;
 	this->isGameOver = false;
 	this->isGameLost = false;
+	this->isGameWon = false;
+
 }
 
 void GameState::setScore(int score)

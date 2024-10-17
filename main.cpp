@@ -1,10 +1,12 @@
 #include <Windows.h>
 #include <glut.h>
+#include <SFML/Audio.hpp>
 #include "GameManager.h"
 
 GameManager* gameManger;
 const double GAME_WIDTH = 1000;
 const double GAME_HEIGHT = 800;
+
 
 void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -32,6 +34,9 @@ void KeyboardUp(unsigned char key, int x, int y) {
 
 
 
+
+
+
 void main(int argc, char** argv) {
 	gameManger = new GameManager(GAME_HEIGHT, GAME_WIDTH);
 
@@ -51,6 +56,7 @@ void main(int argc, char** argv) {
 	glClearColor(7/255.0, 14/255.0, 23/255.0, 1.0f);
 	//glClearColor(1, 1, 1, 1.0f);
 	gluOrtho2D(0, GAME_WIDTH, 0, GAME_HEIGHT);
+
 
 	glutMainLoop();
 }

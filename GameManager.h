@@ -11,6 +11,7 @@
 #include "Shield.h"
 #include "Shrink.h"
 #include "Star.h"
+#include "SoundPlayer.h"
 
 class GameManager
 {
@@ -22,6 +23,8 @@ private:
     FlowManager* flowManager;
     Player* player;
     CollesionManager* collesionManager;
+    SoundPlayer* soundPlayer;
+
     std::vector<Obstacle*> obstacles;
     std::vector<Collectable*> collectables;
     std::vector<Shrink*> shrinks;

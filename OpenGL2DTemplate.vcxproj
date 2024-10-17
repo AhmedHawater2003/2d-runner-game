@@ -53,13 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OutputPath)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user\Desktop\Semester 7\Garphics\SFML-2.6.1-32bit\include;$(OutputPath)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glut32.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutputPath)\..</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\user\Desktop\Semester 7\Garphics\SFML-2.6.1-32bit\lib;$(OutputPath)\..</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,12 +71,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\user\Desktop\Semester 7\Garphics\SFML-2.6.1-32bit\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Users\user\Desktop\Semester 7\Garphics\SFML-2.6.1-32bit\lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -95,8 +98,9 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="Shrink.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Star.cpp" />
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="GameUpperSection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle.cpp" />
@@ -116,8 +120,9 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Shield.h" />
     <ClInclude Include="Shrink.h" />
+    <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="Star.h" />
-    <ClInclude Include="Time.h" />
+    <ClInclude Include="GameTime.h" />
     <ClInclude Include="GameUpperSection.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />

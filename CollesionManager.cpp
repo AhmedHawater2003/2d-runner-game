@@ -2,7 +2,7 @@
 
 
 CollesionManager::CollesionManager(Player* player, GameState* gameState, std::vector<Obstacle*>* obstacles,
-	std::vector<Collectable*>* collectables, std::vector<Shield*>* shields, std::vector<Shrink*>* shrinks)
+	std::vector<Collectable*>* collectables, std::vector<Shield*>* shields, std::vector<Shrink*>* shrinks, SoundPlayer* soundPlayer)
 {
 	this->player = player;
 	this->gameState = gameState;
@@ -10,6 +10,7 @@ CollesionManager::CollesionManager(Player* player, GameState* gameState, std::ve
 	this->collectables = collectables;
 	this->shields = shields;
 	this->shrinks = shrinks;
+	this->soundPlayer = soundPlayer;
 }
 
 void CollesionManager::handleCollesions()
@@ -54,6 +55,7 @@ void CollesionManager::handleCollesions()
 void CollesionManager::handleObstacleCollesion(Obstacle* obstacle)
 {
 	if (player->getShieldingTime() == 0) {
+		soundPlayer->playObstacle();
 		gameState->setLives(gameState->getLives() - 1);
 		player->obstacleBackOffDistance = 300;
 	}
@@ -61,13 +63,15 @@ void CollesionManager::handleObstacleCollesion(Obstacle* obstacle)
 
 void CollesionManager::handleCollectableCollesion(Collectable* collectable)
 {
+	soundPlayer->playCollectable();
 	collectables->erase(std::remove(collectables->begin(), collectables->end(), collectable), collectables->end());
 	delete collectable;
 	gameState->setScore(gameState->getScore() + 1);
 }
 
 void CollesionManager::handleShieldCollesion(Shield* shield)
-{
+{	
+	soundPlayer->playPowerUp();
 	shields->erase(std::remove(shields->begin(), shields->end(), shield), shields->end());
 	delete shield;
 	player->setShieldingTime(10);
@@ -76,6 +80,7 @@ void CollesionManager::handleShieldCollesion(Shield* shield)
 
 void CollesionManager::handleShrinkCollesion(Shrink* shrink)
 {
+	soundPlayer->playPowerUp();
 	shrinks->erase(std::remove(shrinks->begin(), shrinks->end(), shrink), shrinks->end());
 	delete shrink;
 	player->setShrinkingTime(10);

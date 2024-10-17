@@ -1,15 +1,17 @@
+#include <Windows.h>
 #include "GameManager.h"
 #include "Text.h"
 #include <glut.h>
 #include <string>
 
 GameManager::GameManager(double gameHeight, double gameWidth) {
-	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 10);
+	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 120);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
 	player = new Player({ 10, gameState->getLowerBound() }, gameState);
 	flowManager = new FlowManager(gameState, &obstacles, &collectables, &shrinks, &shields);
-	collesionManager = new CollesionManager(player, gameState, &obstacles, &collectables, &shields, &shrinks);
+	soundPlayer = new SoundPlayer();
+	collesionManager = new CollesionManager(player, gameState, &obstacles, &collectables, &shields, &shrinks, soundPlayer);
 	initializeStars();
 }
 
@@ -24,7 +26,7 @@ void GameManager::initializeStars() {
 }
 
 void GameManager::renderGame() {
-	if (gameState->isGameOver) {
+	if (gameState->isGameWon) {
 		std::string message = "Game Over, you won! Your score: " + std::to_string(gameState->getScore());
 		Text(gameState->getWidth() / 2 - 150, gameState->getHeight() / 2, message, 0, 1, 0).render();
 		return;
@@ -95,9 +97,10 @@ void GameManager::handleKeyboardUp(unsigned char keyboardInput) {
 }
 
 void GameManager::onTimer() {
-	if (!gameState->isGameLost && !gameState->isGameOver) {
-		player->applyGravity();
+	if (!gameState->isGameLost && !gameState->isGameWon) {
+		soundPlayer->playBackground();
 
+		player->applyGravity();
 		collesionManager->handleCollesions();
 		flowManager->showPowerUps();
 		flowManager->moveObstacles();
@@ -119,6 +122,17 @@ void GameManager::onTimer() {
 			gameState->isGameLost = true;
 		}
 		if (gameState->getLastCapturedSecond() > gameState->gameDuration) {
+			gameState->isGameWon = true;
+		}
+	}
+	else {
+		if (!gameState->isGameOver) {
+			if (gameState->isGameWon) {
+				soundPlayer->playGameWon();
+			}
+			if (gameState->isGameLost) {
+				soundPlayer->playGameLost();
+			}
 			gameState->isGameOver = true;
 		}
 	}

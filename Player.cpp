@@ -76,7 +76,7 @@ void Player::jump()
 
 void Player::duck()
 {
-	if (position.second == gameState->getLowerBound())
+	if (position.second == gameState->getLowerBound() && !shrinkingTime)
 		height = ORIGINAL_PLAYER_HEIGHT * scale / 2;
 }
 

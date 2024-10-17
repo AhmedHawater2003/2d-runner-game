@@ -1,5 +1,5 @@
 #pragma once
-#include "Time.h"
+#include "GameTime.h"
 #include "Score.h"
 #include "GameState.h"
 #include "Lives.h"
@@ -8,7 +8,7 @@ class GameUpperSection
 	private:
 		double height;
 		GameState* gameState;
-		Time* gameTime;
+		GameTime* gameTime;
 		Score* gameScore;
 		Lives* playerLives;
 	public:
