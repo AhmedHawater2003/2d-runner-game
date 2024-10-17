@@ -20,7 +20,8 @@ class Player : public BoundingBox
 		void jump();
 		void duck();
 		void unDuck();
-		bool isDucking();
+		//bool isDucking();
+		bool isDucking = false;
 		void applyGravity();
 		void decreasePowerUpTime();
 		int getShrinkingTime();

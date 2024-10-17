@@ -8,11 +8,11 @@ Player::Player(std::pair<double, double> position, GameState* gameState)
 }
 
 void Player::render() {
-    // scale down with a factor of 2 if shrinking
+    // scale down with a factor of 0.6 if shrinking
     scale = shrinkingTime ? 0.6 : 1;
 
     width = scale * ORIGINAL_PLAYER_WIDTH;
-    height = scale * ORIGINAL_PLAYER_HEIGHT / (isDucking() ? 2 : 1);
+    height = scale * ORIGINAL_PLAYER_HEIGHT;
 
     const double centerX = position.first + width / 2;
     const double centerY = position.second + height / 2;
@@ -20,70 +20,131 @@ void Player::render() {
 
     glPushMatrix();
 
-    // Head outline (using GL_TRIANGLE_FAN for smooth edges)
-    if (shieldingTime)
-        glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
-    else
-        glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
+    if (isDucking) {
+        // Ducking alien: flattened disc shape
+        const double flattenedHeight = height * 0.4; // 40% of original height when ducking
+        height = flattenedHeight;
+        const double flattenedCenterY = position.second + flattenedHeight / 2;
 
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2d(centerX, centerY); // Center of the sun
-    for (int i = 0; i <= 20; ++i) {
-        double angle = 2.0 * 3.14 * i / 20;
-        double dx = cos(angle) * radius;
-        double dy = sin(angle) * radius;
-        glVertex2d(centerX + dx, centerY + dy);
+        // 1. Flattened body (using GL_TRIANGLE_FAN for smooth edges)
+        if (shieldingTime)
+            glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
+        else
+            glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
+
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2d(centerX, flattenedCenterY); // Center of the flattened alien
+        for (int i = 0; i <= 40; ++i) {
+            double angle = 2.0 * 3.14 * i / 40;
+            double dx = cos(angle) * width / 2;
+            double dy = sin(angle) * flattenedHeight / 2;
+            glVertex2d(centerX + dx, flattenedCenterY + dy);
+        }
+        glEnd();
+
+        // 2. Eyes (using GL_TRIANGLES for alien-like appearance)
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black
+        glBegin(GL_TRIANGLES);
+        // Left eye
+        glVertex2d(centerX - width * 0.2, flattenedCenterY);
+        glVertex2d(centerX - width * 0.1, flattenedCenterY + flattenedHeight * 0.2);
+        glVertex2d(centerX - width * 0.1, flattenedCenterY - flattenedHeight * 0.2);
+        // Right eye
+        glVertex2d(centerX + width * 0.2, flattenedCenterY);
+        glVertex2d(centerX + width * 0.1, flattenedCenterY + flattenedHeight * 0.2);
+        glVertex2d(centerX + width * 0.1, flattenedCenterY - flattenedHeight * 0.2);
+        glEnd();
+
+        // 3. Mouth (using GL_LINE_STRIP)
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black
+        glBegin(GL_LINE_STRIP);
+        glVertex2d(centerX - width * 0.15, flattenedCenterY);
+        glVertex2d(centerX, flattenedCenterY - flattenedHeight * 0.1);
+        glVertex2d(centerX + width * 0.15, flattenedCenterY);
+        glEnd();
+
     }
-    glEnd();
+    else {
 
-    // Eyes (using GL_QUADS for almond shape)
-    glColor3f(0.0f, 0.0f, 0.0f);  // Black
-    glBegin(GL_QUADS);
-    // Left eye
-    glVertex2d(position.first + width * 0.25, position.second + height * 0.6);
-    glVertex2d(position.first + width * 0.45, position.second + height * 0.7);
-    glVertex2d(position.first + width * 0.45, position.second + height * 0.5);
-    glVertex2d(position.first + width * 0.25, position.second + height * 0.4);
-    // Right eye
-    glVertex2d(position.first + width * 0.75, position.second + height * 0.6);
-    glVertex2d(position.first + width * 0.55, position.second + height * 0.7);
-    glVertex2d(position.first + width * 0.55, position.second + height * 0.5);
-    glVertex2d(position.first + width * 0.75, position.second + height * 0.4);
-    glEnd();
+        // Normal alien appearance (unchanged from previous version)
+        // 1. Head outline (using GL_TRIANGLE_FAN for smooth edges)
+        if (shieldingTime)
+            glColor4f(0.2f, 0.8f, 1.0f, 1.0f);
+        else
+            glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
 
-    // Mouth (using GL_LINE_STRIP)
-    glColor3f(0.0f, 0.0f, 0.0f);  // Black
-    glBegin(GL_LINE_STRIP);
-    glVertex2d(position.first + width * 0.4, position.second + height * 0.25);
-    glVertex2d(position.first + width * 0.5, position.second + height * 0.2);
-    glVertex2d(position.first + width * 0.6, position.second + height * 0.25);
-    glEnd();
+        height = scale * ORIGINAL_PLAYER_HEIGHT;
+
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2d(centerX, centerY); // Center of the Alien
+        for (int i = 0; i <= 20; ++i) {
+            double angle = 2.0 * 3.14 * i / 20;
+            double dx = cos(angle) * radius;
+            double dy = sin(angle) * radius;
+            glVertex2d(centerX + dx, centerY + dy);
+        }
+        glEnd();
+
+        // 2. Eyes (using GL_TRIANGLES for more alien-like appearance)
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black
+        glBegin(GL_TRIANGLES);
+        // Left eye
+        glVertex2d(position.first + width * 0.25, position.second + height * 0.6);
+        glVertex2d(position.first + width * 0.4, position.second + height * 0.7);
+        glVertex2d(position.first + width * 0.4, position.second + height * 0.5);
+        // Right eye
+        glVertex2d(position.first + width * 0.75, position.second + height * 0.6);
+        glVertex2d(position.first + width * 0.6, position.second + height * 0.7);
+        glVertex2d(position.first + width * 0.6, position.second + height * 0.5);
+        glEnd();
+
+        // 3. Mouth (using GL_LINE_STRIP)
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black
+        glBegin(GL_LINE_STRIP);
+        glVertex2d(position.first + width * 0.35, position.second + height * 0.3);
+        glVertex2d(position.first + width * 0.5, position.second + height * 0.25);
+        glVertex2d(position.first + width * 0.65, position.second + height * 0.3);
+        glEnd();
+
+        // 4. Antennae (using GL_LINES)
+        glColor3f(0.5f, 0.8f, 0.2f);  // Bright green
+        glBegin(GL_LINES);
+        // Left antenna
+        glVertex2d(centerX - radius * 0.5, centerY + radius);
+        glVertex2d(centerX - radius * 0.7, centerY + radius * 1.5);
+        // Right antenna
+        glVertex2d(centerX + radius * 0.5, centerY + radius);
+        glVertex2d(centerX + radius * 0.7, centerY + radius * 1.5);
+        glEnd();
+    }
 
     glPopMatrix();
 }
-
-bool Player::isDucking()
-{
-	return height == ORIGINAL_PLAYER_HEIGHT * scale / 2;
-}
+//
+//bool Player::isDucking()
+//{
+//	return height == ORIGINAL_PLAYER_HEIGHT * scale / 2;
+//}
 
 void Player::jump()
 {
 	const double JUMP_HEIGHT = 150;
-	if (position.second == gameState->getLowerBound() && !isDucking())
+	if (position.second == gameState->getLowerBound() && !isDucking)
 		position.second += JUMP_HEIGHT;
 }
 
 void Player::duck()
 {
 	if (position.second == gameState->getLowerBound() && !shrinkingTime)
-		height = ORIGINAL_PLAYER_HEIGHT * scale / 2;
+		/*height = ORIGINAL_PLAYER_HEIGHT * scale / 2;*/
+        isDucking = true;
 }
 
 void Player::unDuck()
 {
 	if (position.second == gameState->getLowerBound())
-		height = ORIGINAL_PLAYER_HEIGHT * scale;
+		//height = ORIGINAL_PLAYER_HEIGHT * scale;
+		isDucking = false;
 }
 
 void Player::applyGravity()
