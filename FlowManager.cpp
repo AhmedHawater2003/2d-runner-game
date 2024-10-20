@@ -147,6 +147,6 @@ void FlowManager::showPowerUps() {
 	}
 	if (std::count(all(shrinksTimes), second)) {
 		shrinksTimes.erase(std::remove(shrinksTimes.begin(), shrinksTimes.end(), second), shrinksTimes.end());
-		shrinks->push_back(new Shrink({ gameState->getWidth(), 250 }));
+		shrinks->push_back(new Shrink({ gameState->getWidth(), 200 }));
 	}
 }

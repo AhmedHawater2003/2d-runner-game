@@ -20,7 +20,7 @@ void Shrink::render() {
     animationTime += 0.05;
 
     // Calculate scaling factor using a sine wave for smooth oscillation
-    double scaleFactor = 1.0 + 0.2 * std::sin(animationTime);
+    double scaleFactor = 1.0 + 0.3 * std::sin(animationTime);
 
     // Calculate center position
     double centerX = position.first + POWERUP_WIDTH / 2;

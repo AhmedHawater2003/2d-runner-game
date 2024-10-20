@@ -5,7 +5,7 @@
 #include <string>
 
 GameManager::GameManager(double gameHeight, double gameWidth) {
-	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 30);
+	gameState = new GameState(0, 5, gameWidth, gameHeight, 100, gameHeight - 100, 3, 90);
 	lowerSection = new GameLowerSection(gameState, gameState->getLowerBound());
 	upperSection = new GameUpperSection(gameState, gameHeight - gameState->getUpperBound());
 	player = new Player({ 10, gameState->getLowerBound() }, gameState);
@@ -27,7 +27,7 @@ void GameManager::initializeStars() {
 
 void GameManager::renderGame() {
 	if (gameState->isGameWon) {
-		std::string message = "Game Over, you won! Your score: " + std::to_string(gameState->getScore());
+		std::string message = "Game Over, you did it! Your score: " + std::to_string(gameState->getScore());
 		Text(gameState->getWidth() / 2 - 150, gameState->getHeight() / 2, message, 0, 1, 0).render();
 		return;
 	}
@@ -63,6 +63,11 @@ void GameManager::renderGame() {
 		shrink->render();
 	}
 	glPopMatrix();
+
+	if(player->getShrinkingTime())
+		Text(50, gameState->getHeight() - 100, "Shrink: " + std::to_string(player->getShrinkingTime())).render();
+	if(player->getShieldingTime())
+		Text(150, gameState->getHeight() - 100, "Shield: " + std::to_string(player->getShieldingTime())).render();
 
 	for (Star* star : stars) {
 		star->render();
@@ -100,6 +105,8 @@ void GameManager::onTimer() {
 	if (!gameState->isGameLost && !gameState->isGameWon) {
 		soundPlayer->playBackground();
 
+		
+
 		player->applyGravity();
 		collesionManager->handleCollesions();
 		flowManager->showPowerUps();
@@ -113,7 +120,7 @@ void GameManager::onTimer() {
 			gameState->setLastCapturedSecond(currentSecond);
 			player->decreasePowerUpTime();
 			gameState->setSpeed(gameState->getSpeed() + 0.05);
-			gameState->minGravity += 0.1;
+			gameState->gravity -= 10;
 		}
 
 		updateStars();

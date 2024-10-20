@@ -22,7 +22,7 @@ void Shield::render() {
     animationTime += 0.05;
 
     // Calculate scaling factor using a sine wave for smooth oscillation
-    double scaleFactor = 1.0 + 0.2 * std::sin(animationTime);
+    double scaleFactor = 1.0 + 0.5 * std::sin(animationTime);
 
     // Calculate the center and radius of the shield
     double centerX = position.first + POWERUP_WIDTH / 2;
@@ -41,6 +41,23 @@ void Shield::render() {
         glVertex2d(x, y);
     }
     glEnd();
+
+    // NEW: Draw orbiting energy rings
+    for (int ring = 0; ring < 3; ring++) {
+        glBegin(GL_LINE_STRIP);
+        double ringOffset = animationTime * (1.0 + ring * 0.5);
+        double ringRadius = radius * (0.6 + ring * 0.2);
+        for (int i = 0; i <= 50; ++i) {
+            double theta = 2.0 * 3.14159 * double(i) / 50.0 + ringOffset;
+            double x = centerX + ringRadius * std::cos(theta);
+            double y = centerY + ringRadius * std::sin(theta);
+            // Pulse the color
+            float alpha = 0.5f + 0.3f * std::sin(animationTime * 2.0 + ring);
+            glColor4f(0.3f, 0.8f, 1.0f, alpha);
+            glVertex2d(x, y);
+        }
+        glEnd();
+    }
 
     // Draw hexagonal energy field
     glBegin(GL_TRIANGLE_FAN);
@@ -93,5 +110,4 @@ void Shield::render() {
     glVertex2d(centerX + squareSize, centerY + squareSize);
     glVertex2d(centerX - squareSize, centerY + squareSize);
     glEnd();
-
 }

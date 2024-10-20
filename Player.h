@@ -9,6 +9,10 @@ class Player : public BoundingBox
 	private:
 		GameState* gameState;
 		int shieldingTime, shrinkingTime;
+		bool isJumping = false;
+		double verticalVelocity = 0;
+		const double JUMP_INITIAL_VELOCITY = 420;  // Adjust as needed
+
 
 	public:
 		double obstacleBackOffDistance = 0;

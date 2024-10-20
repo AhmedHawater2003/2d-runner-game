@@ -15,11 +15,15 @@ void Collectable::setPosition(std::pair<double, double> position) {
 }
 
 void Collectable::render() {
-    double centerX = position.first + COLLECTABLE_WIDTH / 2;
-    double baseY = position.second;
 
-    // Increase the colorChangeFactor over time to change colors
-    colorChangeFactor += 0.05;  // Adjust this speed value as needed
+    double amplitude = 5.0; // Adjust this value for bigger/smaller motion
+    double frequency = 2.0; // Adjust this for faster/slower motion
+    double verticalOffset = amplitude * sin(frequency * colorChangeFactor);
+
+    double centerX = position.first + COLLECTABLE_WIDTH / 2;
+    double baseY = position.second + verticalOffset; // Add vertical offset here
+
+    colorChangeFactor += 0.05; // Keep this as a time counter
 
     // Use sine or cosine functions to oscillate between 0 and 1 for RGB
     float redFinColor = (sin(colorChangeFactor) + 1) / 2;
@@ -27,9 +31,9 @@ void Collectable::render() {
     float blueFinColor = (sin(colorChangeFactor + 4) + 1) / 2;   // Offset for variation
 
     glPushMatrix();
-    glTranslated(position.first, position.second, 0);
+    glTranslated(position.first, baseY, 0); // Use baseY here
     glRotated(45, 0, 0, 1);
-    glTranslated(-position.first, -position.second, 0);
+    glTranslated(-position.first, -baseY, 0); // And here
 
     // Rocket body (no changes here)
     glColor3f(0.5, 0.5, 0.5);  // Blue body

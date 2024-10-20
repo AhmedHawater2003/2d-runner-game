@@ -24,7 +24,7 @@ void GameUpperSection::render() {
     gameScore->render();
 
 
-    // Now let's draw a blue sun with solar flares on the right side
+    // Blue sun with solar flares on the right side
     double sunX = gameState->getWidth() - 100; // Position the sun on the right
     double sunY = gameState->getHeight() - 70; // Vertical center of the upper section
     double sunRadius = 30.0; // Size of the sun
