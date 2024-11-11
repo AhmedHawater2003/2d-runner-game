@@ -120,7 +120,7 @@ void GameManager::onTimer() {
 			gameState->setLastCapturedSecond(currentSecond);
 			player->decreasePowerUpTime();
 			gameState->setSpeed(gameState->getSpeed() + 0.05);
-			gameState->gravity -= 10;
+			gameState->gravity -= 5;
 		}
 
 		updateStars();
