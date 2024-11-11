@@ -1,7 +1,6 @@
 # Alien Runner 🚀👾
 
-A 2D infinite runner game built with OpenGL and C++, where you control an alien dodging obstacles and collecting items in space! Designed as part of the Computer Graphics coursework, this project demonstrates strong foundational skills in graphics programming, gameplay mechanics, and game design.
-
+A 2D infinite runner game built with OpenGL and C++, where you control an alien dodging obstacles and collecting items in space! Designed as part of the Computer Graphics coursework, this project demonstrates strong foundational skills in graphics programming and Object-Oriented programming with C++
 ## Table of Contents
 - [Game Overview](#game-overview)
 - [Features](#features)
@@ -13,9 +12,10 @@ A 2D infinite runner game built with OpenGL and C++, where you control an alien 
 - [Contact](#contact)
 
 ## Game Overview
-Alien Runner is a side-scrolling endless runner where the player is an alien navigating through space, dodging obstacles and collecting items to boost their score. The game features increasing difficulty, a responsive health system, and animated collectibles and power-ups.
+Alien Runner is a side-scrolling endless runner where the player is an alien navigating through space, dodging obstacles and collecting items to boost their score. The game features increasing difficulty, a responsive health system, and animated collectibles and power-ups. You can find a short video illustration of the game [here](https://drive.google.com/file/d/1dkzet09zca2Aa7kfv5uEN8oNnZ9mk4Tl/view)
 
-![Screenshot of Alien Runner]()
+![image](https://github.com/user-attachments/assets/53ebf451-e136-4778-90d5-46719fd8ba31)
+
 
 ## Features
 - **Space Theme**: Immersive alien player model and galactic background.
@@ -25,7 +25,7 @@ Alien Runner is a side-scrolling endless runner where the player is an alien nav
 - **Animated Collectibles & Power-Ups**: Engaging animations for objects with varying effects on gameplay.
 
 ## Controls
-- **Jump**: `Space` or `W` key
+- **Jump**: `W` key
 - **Duck**: `S` key
 
 ## Gameplay Elements
